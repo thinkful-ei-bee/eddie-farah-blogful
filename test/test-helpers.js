@@ -243,7 +243,8 @@ function seedArticlesTables(db, users, articles, comments=[]) {
   // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
     await seedUsers(trx, users)
-    await db.into('blogful_articles').insert(articles)
+    await trx.into('blogful_articles').insert(articles)
+    //await db.into('blogful_articles').insert(articles)
     // update the auto sequence to match the forced id values
      await trx.raw(
        `SELECT setval('blogful_articles_id_seq', ?)`,
