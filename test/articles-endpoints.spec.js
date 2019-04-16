@@ -85,7 +85,9 @@ describe('Articles Endpoints', function() {
     })
   })
 
-  describe(`GET /api/articles/:article_id`, () => {
+  describe(`GET /api/articles/:article_id`, () => {      
+    const testUser = helpers.makeUsersArray()[1]
+
     context(`Given no articles`, () => {
       beforeEach(() =>
         helpers.seedUsers(db,testUsers)
@@ -94,6 +96,7 @@ describe('Articles Endpoints', function() {
         const articleId = 123456
         return supertest(app)
           .get(`/api/articles/${articleId}`)
+          .set('Authorization', helpers.makeAuthHeader(testUser))
           .expect(404, { error: `Article doesn't exist` })
       })
     })
@@ -118,6 +121,7 @@ describe('Articles Endpoints', function() {
 
         return supertest(app)
           .get(`/api/articles/${articleId}`)
+          .set('Authorization', helpers.makeAuthHeader(testUser))
           .expect(200, expectedArticle)
       })
     })
@@ -140,6 +144,7 @@ describe('Articles Endpoints', function() {
       it('removes XSS attack content', () => {
         return supertest(app)
           .get(`/api/articles/${maliciousArticle.id}`)
+          .set('Authorization', helpers.makeAuthHeader(testUser))
           .expect(200)
           .expect(res => {
             expect(res.body.title).to.eql(expectedArticle.title)
@@ -150,6 +155,7 @@ describe('Articles Endpoints', function() {
   })
 
   describe(`GET /api/articles/:article_id/comments`, () => {
+    const testUser = helpers.makeUsersArray()[1]
     context(`Given no articles`, () => {
       beforeEach(()=>
         helpers.seedUsers(db,testUsers)
@@ -158,6 +164,7 @@ describe('Articles Endpoints', function() {
         const articleId = 123456
         return supertest(app)
           .get(`/api/articles/${articleId}/comments`)
+          .set('Authorization', helpers.makeAuthHeader(testUser))
           .expect(404, { error: `Article doesn't exist` })
       })
     })
@@ -180,6 +187,7 @@ describe('Articles Endpoints', function() {
 
         return supertest(app)
           .get(`/api/articles/${articleId}/comments`)
+          .set('Authorization', helpers.makeAuthHeader(testUser))
           .expect(200, expectedComments)
       })
     })

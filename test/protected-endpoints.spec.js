@@ -54,6 +54,9 @@ describe('Protected endpoints', function() {
 
   protectedEndpoints.forEach(endpoint => {
     describe(endpoint.name, () => {
+      // beforeEach(() =>
+      //   helpers.seedUsers(db,testUsers)
+      // )
       it(`responds 401 'Missing basic token' when no basic token`, () => {
         return endpoint.method(endpoint.path)
           .expect(401, { error: `Missing basic token` })
